@@ -5,7 +5,7 @@ TAG="3.0"
 
 NAME="teamcity-agent"
 TEAMCITY_SERVER=${TEAMCITY_SERVER:-http://teamcity:8111}
-TEAMCITY_AGENT_NAME=${TEAMCITY_AGENT_NAME:-$USER}
+TEAMCITY_AGENT_NAME=${TEAMCITY_AGENT_NAME:-$HOSTNAME}
 TEAMCITY_OWN_ADDRESS=${TEAMCITY_OWN_ADDRESS:-$(ip addr | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1' | head -n1)}
 
 docker create \
