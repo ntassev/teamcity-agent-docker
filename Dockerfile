@@ -1,5 +1,7 @@
 FROM ubuntu:14.04
 
+ENV DEBIAN_FRONTEND noninteractive
+
 ENV AGENT_DIR  /opt/buildAgent
 
 RUN apt-get update \
@@ -100,12 +102,32 @@ RUN ruby-switch --set ruby2.1
 RUN npm install -g bower grunt-cli
 RUN gem install rake bundler compass --no-ri --no-rdoc
 
+RUN apt-get update && apt-get install -y mercurial zip \
+  python-dev libxml2-dev libxslt1-dev phantomjs stunnel4 git g++ imagemagick && \
+  ln -s /lib/x86_64-linux-gnu/libz.so.1 /usr/lib/libz.so && \
+  ln -s /bin/true /usr/local/bin/growlnotify
+
+USER teamcity
+WORKDIR /home/teamcity
+
+# Install gcloud
+#
+RUN wget https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.zip \
+    && unzip google-cloud-sdk.zip \
+    && rm google-cloud-sdk.zip \
+    && HOME=/home/teamcity google-cloud-sdk/install.sh --usage-reporting=true --path-update=true --bash-completion=true --rc-path=/home/teamcity/.bashrc --disable-installation-options \
+    && HOME=/home/teamcity ./google-cloud-sdk/bin/gcloud components update app 
+
+USER root
+WORKDIR /
+    
 # Install the magic wrapper.
 ADD wrapdocker /usr/local/bin/wrapdocker
 
 ADD docker-entrypoint.sh /docker-entrypoint.sh
 
-ENTRYPOINT ["/docker-entrypoint.sh"]
+ENTRYPOINT ["/bin/bash"]
+CMD ["/docker-entrypoint.sh"]
 
 VOLUME /var/lib/docker
 VOLUME /opt/buildAgent
