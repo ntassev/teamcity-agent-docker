@@ -1,0 +1,13 @@
+[Unit]
+Description=TeamCity Agent container
+Requires=docker.service
+After=docker.service
+
+[Service]
+Restart=always
+ExecStart=/usr/bin/docker start -a teamcity-agent
+ExecStop=/usr/bin/docker stop -t 2 teamcity-agent
+
+[Install]
+WantedBy=multi-user.target
+
