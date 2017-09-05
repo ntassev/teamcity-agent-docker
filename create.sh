@@ -1,6 +1,6 @@
 #!/bin/bash
 
-REPO="ntassev/teamcity-agent"
+REPO="ntassev/teamcity-agent-docker"
 TAG="3.0"
 
 NAME="teamcity-agent"
